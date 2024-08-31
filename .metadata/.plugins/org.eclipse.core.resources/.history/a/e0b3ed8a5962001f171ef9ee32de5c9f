@@ -1,0 +1,7 @@
+spring.application.name=DiscoveryService
+server.port=8010
+eureka.instance.hostname=localhost
+eureka.client.register-with-eureka=false
+eureka.client.service-url.defaultZone=http://${eureka.instance.hostname}:8010/eureka
+spring.security.user.name=testuser
+spring.security.user.password=user1

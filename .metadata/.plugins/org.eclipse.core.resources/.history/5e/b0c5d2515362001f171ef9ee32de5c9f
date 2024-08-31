@@ -1,0 +1,16 @@
+spring.application.name=Config-Server
+server.port=8030
+spring.cloud.config.server.git.uri=file:///D:/SWorkspace/Spring/Cloud/properties
+#spring.cloud.config.server.git.uri=https://github.com/shubhamSH7/CloudConfig
+#spring.cloud.config.server.git.username=shubhamSH7
+#spring.cloud.config.server.git.password=#Wakanda69
+#spring.cloud.config.server.git.clone-on-start=true
+#spring.cloud.config.server.git.default-label=main
+
+management.endpoints.web.exposure.include=busrefresh
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=guest
+spring.rabbitmq.password=guest
+
+

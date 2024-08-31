@@ -1,0 +1,81 @@
+package com.posts.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.posts.dto.PostsDTO;
+import com.posts.dto.UsersDTO;
+import com.posts.security.JWTService;
+import com.posts.service.PostService;
+
+import jakarta.validation.Valid;
+
+@RestController
+public class PostController {
+	
+	@Autowired
+	PostService postservice;
+	
+	@Autowired
+	JWTService jwtService;
+	
+	public UsersDTO getUserDet(@RequestHeader("Authorization") String authHeader ) {
+		String token=authHeader.substring(7);
+		UsersDTO user = new UsersDTO(jwtService.extractUsername(token),jwtService.extractUID(token));
+		return user;
+	}
+	public int getUID(@RequestHeader("Authorization") String authHeader ) {
+		String token=authHeader.substring(7);
+		
+		return jwtService.extractUID(token);
+	}
+	public String getUsername(@RequestHeader("Authorization") String authHeader ) {
+		String token=authHeader.substring(7);
+		
+		return jwtService.extractUsername(token);
+	}
+	
+	@GetMapping(path = "/allposts")
+	public ResponseEntity<List<PostsDTO>> getPosts() {
+		List<PostsDTO> allposts = postservice.getAllPost();
+		return new ResponseEntity<List<PostsDTO>>(allposts, HttpStatus.ACCEPTED);
+	}
+
+	@PostMapping(path = "/newpost")
+	public ResponseEntity<PostsDTO> createpost(@Valid @RequestBody PostsDTO npost) {
+		npost.setUserID(0)
+		postservice.Create(npost);
+		return new ResponseEntity<PostsDTO>(npost, HttpStatus.CREATED);
+
+	}
+
+//	@GetMapping(path = "/byuser")
+//	public ResponseEntity<List<PostsDTO>> allposts() {
+//		List<PostsDTO> byCurrent = postservice.getByCurrent();
+//		return new ResponseEntity<List<PostsDTO>>(byCurrent, HttpStatus.FOUND);
+//	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> del(@PathVariable int id) {
+		postservice.delete(id);
+		return new ResponseEntity<String>("deleted", HttpStatus.ACCEPTED);
+	}
+
+	@PatchMapping("/update/{id}")
+	public ResponseEntity<PostsDTO> updatePost(@Valid @RequestBody PostsDTO updatePost, @PathVariable int id) {
+		postservice.update(updatePost, id);
+		return new ResponseEntity<PostsDTO>(updatePost, HttpStatus.ACCEPTED);
+
+	}
+}
